@@ -11,6 +11,15 @@ function verplaats  {
       if [[ $subdir =~ ^nl-sitzberechnung ]]; then
         subdir="nl-sitzberechnung"
       fi
+      if [[ $subdir =~ ^elect-technical-password ]]; then
+        subdir="elect-technical"
+      fi
+      if [[ $subdir =~ ^elect-base-extension-csv ]]; then
+        subdir="elect-base-extension"
+      fi
+      if [[ $subdir =~ ^elect-common-extension-personenregister ]]; then
+        subdir="elect-common-extension"
+      fi
       if [[ ! -e $subdir ]]; then
         mkdir $subdir
       fi
@@ -85,6 +94,15 @@ function resources {
     done
 }
 
+function fixSitzberechnung {
+  rm nl-sitzberechnung/nl-sitzberechnung-osv-legacy/src/main/java/de/pom.xml
+  dir="nl-sitzberechnung/nl-sitzberechnung-osv-legacy/src/main/java/de/ivu/wahl/result/determination"
+  for f in `grep -L "package de.ivu.wahl.result.determination" $dir/*`
+  do
+    rm $f
+  done
+}
+
 function codefixes {
   verwijderVersies
   verwijderClass
@@ -94,30 +112,50 @@ function codefixes {
   src "oasis"
   patchGBAV
   resources
+  fixSitzberechnung
 }
 
-if [ ! -e "$1/nl-was-jar-1.2.0.1" ]; then
-  echo Heb je de juiste directory meegegeven waar de OSV2020-u broncode staat.
-  echo
-  exit 1;
-fi
+function check {
+  if [ ! -e "$1/nl-was-jar-1.3.9" ]; then
+    echo Heb je de juiste directory meegegeven waar de OSV2020-u broncode staat.
+    echo
+    exit 1;
+  fi
+}
+
+function gitInit {
+  echo Stel originele broncode veilig met git  
+  find . -type f -exec dos2unix {} \; 2>&1 > /dev/null 
+  git init
+  git add .
+  git commit -m "Originele broncode"
+}
+
+function gitTransform {
+  echo Transformeer de broncode
+  codefixes 
+  git add .
+  git commit -m "Verplaats en hernoem broncode"
+}
+
+function gitPatch {
+  echo Pas patch bestand $1 toe
+  git apply $RUN_DIR/$1 -v --reject
+  git add .
+  git rm *.rej
+  git commit -m "$2"
+}
+
+######################## HOOFDPROGMMA ########################
+
+check $1
 
 RUN_DIR=`pwd`
 cd $1
 
-echo Stel originele broncode veilig met git  
-find . -type f -exec dos2unix {} \; 2>&1 > /dev/null 
-git init
-git add .
-git commit -m "Originele broncode"
+gitInit
+gitTransform
+gitPatch osv2020-u.patch 'Patch met aanpassingen en extra pom.xml bestanden'
+gitPatch osv2020-u-dummy.patch 'Patch met dummy implementaties van ontbrekende classen'
 
-echo Transformeer de broncode
-codefixes 
-git add .
-git commit -m "Verplaats en hernoem broncode"
-
-echo Pas patch bestand toe
-git apply $RUN_DIR/osv2020-u.patch -v --reject
-git add .
-git commit -m "Patch met aanpassingen en extra pom.xml bestanden"
-
+echo Het zou nu moeten werken om met maven de code te bouwen.

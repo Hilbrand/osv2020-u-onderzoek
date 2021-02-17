@@ -22,11 +22,11 @@ unzip $FILE -d $TMPDIR/$WARFILE > $TMPDIR/$WARFILE.unzip.log
 
 ROOT=$TMPDIR/$WARFILE/WEB-INF/lib/
 cd $ROOT
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=${ROOT}document-generator-annotations-2.4.1.jar
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=${ROOT}document-generator-generator-2.4.1.jar
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=${ROOT}document-generator-core-2.4.1.jar
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=${ROOT}document-generator-odt-2.4.1.jar
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=${ROOT}velocity-template-engine-core-2.2.0.jar
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=${ROOT}velocity-template-engine-interfaces-2.2.0.jar
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=${ROOT}ivu-jsefa-addon-1.1.0.jar
-mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=${ROOT}jopendocument-2.1.0.jar
+mvn install:install-file -Dfile=${ROOT}document-generator-annotations-2.4.1.jar
+mvn install:install-file -Dfile=${ROOT}document-generator-generator-2.4.1.jar
+mvn install:install-file -Dfile=${ROOT}document-generator-core-2.4.1.jar
+mvn install:install-file -Dfile=${ROOT}document-generator-odt-2.4.1.jar
+mvn install:install-file -Dfile=${ROOT}velocity-template-engine-core-2.2.0.jar
+mvn install:install-file -Dfile=${ROOT}velocity-template-engine-interfaces-2.2.0.jar
+mvn install:install-file -Dfile=${ROOT}ivu-jsefa-addon-1.1.0.jar
+mvn install:install-file -Dfile=${ROOT}jopendocument-2.1.0.jar

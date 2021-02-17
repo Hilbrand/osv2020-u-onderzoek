@@ -1,0 +1,259 @@
+From 278f5f15069a3ee6d7918d7edf65bba6934ab6df Mon Sep 17 00:00:00 2001
+From: Hilbrand Bouwkamp <hilbrand@h72.nl>
+Date: Fri, 26 Feb 2021 16:51:37 +0100
+Subject: [PATCH] Dummy objecten die missen
+
+Objecten zijn alleen placeholder om te kunnen compileren. Deze kunnen verwijderd worden als de missende jar of sources wel beschikbaar zijn.
+---
+ .../template/odt/builder/OdtTableBuilder.java | 47 +++++++++++++++++++
+ .../template/odt/elements/OdtElement.java     |  4 ++
+ .../odt/elements/OdtTextParagraph.java        | 21 +++++++++
+ .../odt/elements/OdtTextTabulator.java        |  5 ++
+ .../odt/styles/DocumentStyleTemplate.java     |  5 ++
+ .../template/odt/styles/OdtPageLayout.java    | 11 +++++
+ .../odt/styles/OdtTableCellStyle.java         | 29 ++++++++++++
+ .../odt/styles/OdtTableColumnStyle.java       | 25 ++++++++++
+ .../odt/styles/OdtTextParagraphStyle.java     | 28 +++++++++++
+ 9 files changed, 175 insertions(+)
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/builder/OdtTableBuilder.java
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtElement.java
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtTextParagraph.java
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtTextTabulator.java
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/DocumentStyleTemplate.java
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtPageLayout.java
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTableCellStyle.java
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTableColumnStyle.java
+ create mode 100644 elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTextParagraphStyle.java
+
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/builder/OdtTableBuilder.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/builder/OdtTableBuilder.java
+new file mode 100644
+index 0000000..1655c37
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/builder/OdtTableBuilder.java
+@@ -0,0 +1,47 @@
++package de.ivu.document.generator.template.odt.builder;
++
++import org.jdom.Element;
++
++import de.ivu.document.generator.template.odt.styles.DocumentStyleTemplate;
++import de.ivu.document.generator.template.odt.styles.OdtTableCellStyle;
++import de.ivu.document.generator.template.odt.styles.OdtTableColumnStyle;
++
++public class OdtTableBuilder {
++
++	public static OdtTableBuilder create() {
++		return null;
++	}
++
++	public OdtTableBuilder setDefaultCellStyle(DocumentStyleTemplate template) {
++        return null;
++	}
++
++	public OdtTableColumnStyle addColumn() {
++		return null;
++	}
++
++	public void addRow() {
++	}
++
++	public OdtTableCellStyle addCell(String[] string) {
++		return null;
++	}
++
++	public OdtTableCellStyle addCell(String message) {
++		return null;
++	}
++
++	public void withCellTextStyle(DocumentStyleTemplate template) {
++	}
++
++	public void withColSpan(Integer integer) {
++	}
++
++	public void withRowSpan(int i) {
++	}
++
++	public Element build() {
++		return null;
++	}
++    
++}
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtElement.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtElement.java
+new file mode 100644
+index 0000000..bdd665d
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtElement.java
+@@ -0,0 +1,4 @@
++package de.ivu.document.generator.template.odt.elements;
++
++public class OdtElement extends org.jdom.Element {
++}
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtTextParagraph.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtTextParagraph.java
+new file mode 100644
+index 0000000..96d8bf0
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtTextParagraph.java
+@@ -0,0 +1,21 @@
++package de.ivu.document.generator.template.odt.elements;
++
++import org.jdom.Element;
++
++import de.ivu.document.generator.template.odt.styles.DocumentStyleTemplate;
++
++public class OdtTextParagraph extends OdtElement {
++
++	public static OdtTextParagraph createParagraphWithStyle(DocumentStyleTemplate template) {
++		return null;
++	}
++
++	public Element addChild(OdtTextTabulator odtTextTabulator) {
++		return null;
++	}
++
++	public Element addTab() {
++		return null;
++	}
++  
++}
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtTextTabulator.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtTextTabulator.java
+new file mode 100644
+index 0000000..160f76d
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/elements/OdtTextTabulator.java
+@@ -0,0 +1,5 @@
++package de.ivu.document.generator.template.odt.elements;
++
++public class OdtTextTabulator extends OdtElement {
++    
++}
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/DocumentStyleTemplate.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/DocumentStyleTemplate.java
+new file mode 100644
+index 0000000..5651ca0
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/DocumentStyleTemplate.java
+@@ -0,0 +1,5 @@
++package de.ivu.document.generator.template.odt.styles;
++
++public interface DocumentStyleTemplate {
++    String getName();
++}
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtPageLayout.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtPageLayout.java
+new file mode 100644
+index 0000000..ca08096
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtPageLayout.java
+@@ -0,0 +1,11 @@
++package de.ivu.document.generator.template.odt.styles;
++
++import de.ivu.document.generator.template.odt.elements.OdtElement;
++
++public class OdtPageLayout {
++
++	public static OdtElement createStyleLandscape(DocumentStyleTemplate template) {
++		return null;
++	}
++
++}
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTableCellStyle.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTableCellStyle.java
+new file mode 100644
+index 0000000..f1acc36
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTableCellStyle.java
+@@ -0,0 +1,29 @@
++package de.ivu.document.generator.template.odt.styles;
++
++import de.ivu.document.generator.template.odt.builder.OdtTableBuilder;
++import de.ivu.document.generator.template.odt.elements.OdtElement;
++
++public class OdtTableCellStyle extends OdtElement {
++
++	public static OdtElement createStyleBorderSmallBlack(DocumentStyleTemplate template) {
++		return null;
++	}
++
++	public static OdtElement createStyleBorderNone(DocumentStyleTemplate template) {
++		return null;
++	}
++   
++	public void addVerticalAlign(String string) {
++	}
++
++	public void addPadding(String string) {
++	}
++
++	public void withCellTextStyle(DocumentStyleTemplate template) {
++	}
++
++	public OdtTableBuilder withRowSpan(int i) {
++		return null;
++	}
++
++}
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTableColumnStyle.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTableColumnStyle.java
+new file mode 100644
+index 0000000..a52a564
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTableColumnStyle.java
+@@ -0,0 +1,25 @@
++package de.ivu.document.generator.template.odt.styles;
++
++import de.ivu.document.generator.template.odt.elements.OdtElement;
++
++public class OdtTableColumnStyle extends OdtElement {
++
++	public OdtTableColumnStyle(DocumentStyleTemplate template) {
++	}
++
++	public OdtTableColumnStyle() {
++	}
++
++	public void addRelativeWidth(int i) {
++	}
++
++	public void addName(String styleName) {
++	}
++
++	public void withColumnStyle(DocumentStyleTemplate template) {
++	}
++
++	public void withColumnStyle(String styleName) {
++	}
++    
++}
+diff --git a/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTextParagraphStyle.java b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTextParagraphStyle.java
+new file mode 100644
+index 0000000..8995e19
+--- /dev/null
++++ b/elect-was/elect-was-exchange/src/main/java/de/ivu/document/generator/template/odt/styles/OdtTextParagraphStyle.java
+@@ -0,0 +1,28 @@
++package de.ivu.document.generator.template.odt.styles;
++
++import de.ivu.document.generator.template.odt.elements.OdtElement;
++
++public class OdtTextParagraphStyle extends OdtElement {
++
++	public OdtTextParagraphStyle(DocumentStyleTemplate template) {
++	}
++
++	public void addMarginRight(String string) {
++	}
++
++	public void addFontName(String string) {
++	}
++
++	public void addFontSize(String string) {
++	}
++
++	public void addFontWeight(String string) {
++	}
++
++	public void addTextAlign(String string) {
++	}
++
++	public void addMarginBottom(String string) {
++	}
++    
++}
+-- 
+2.20.1
+
