@@ -1,29 +1,31 @@
-From 875e6052aa429f4b62156f56111c828111440d60 Mon Sep 17 00:00:00 2001
+From 358d878b13ca58e7a6ee4ecf15d06d44a2ffb5bc Mon Sep 17 00:00:00 2001
 From: Hilbrand Bouwkamp <hilbrand@h72.nl>
-Date: Wed, 27 Jan 2021 23:21:46 +0100
+Date: Mon, 15 Feb 2021 11:08:20 +0100
 Subject: [PATCH] Patch met aanpassingen en extra pom.xml bestanden
 
 ---
- .gitignore                                    |   1 +
+ .gitignore                                    |   4 +
+ .../elect-base-extension-soap/pom.xml         |   3 +-
  elect-base-extension/pom.xml                  |  30 +
  elect-base/elect-base-documents/pom.xml       |   9 +-
- elect-base/elect-base-exchange/pom.xml        |   6 +
+ elect-base/elect-base-exchange/pom.xml        |   5 +
  elect-base/elect-base-jar/pom.xml             |   7 +-
  elect-base/pom.xml                            |  30 +
+ elect-common-extension/pom.xml                |  28 +
  elect-common/elect-common-documents/pom.xml   |  12 +-
  elect-common/elect-common-exchange/pom.xml    |  10 +-
  elect-common/elect-common-jar/pom.xml         |   7 +-
  elect-common/pom.xml                          |  30 +
  elect-core/elect-core-documents/pom.xml       |  12 +-
  elect-core/elect-core-exchange/pom.xml        |   4 +-
- elect-core/elect-core-jar/pom.xml             |  13 +-
+ elect-core/elect-core-jar/pom.xml             |   6 +-
  elect-core/pom.xml                            |  30 +
  elect-model-db/pom.xml                        |  37 +
  elect-sitzberechnung/pom.xml                  |  29 +
  elect-stimmzettel-interfaces/pom.xml          |  28 +
  elect-technical/pom.xml                       |  33 +
  elect-was/elect-was-documents/pom.xml         |   7 +-
- elect-was/elect-was-exchange/pom.xml          |   4 +-
+ elect-was/elect-was-exchange/pom.xml          |   3 +-
  elect-was/elect-was-jar/pom.xml               |   7 +-
  elect-was/elect-was-persistence/pom.xml       |   3 +-
  elect-was/pom.xml                             |  32 +
@@ -32,25 +34,26 @@ Subject: [PATCH] Patch met aanpassingen en extra pom.xml bestanden
  nl-base/pom.xml                               |  28 +
  nl-common/nl-common-jar/pom.xml               |   4 +-
  nl-common/pom.xml                             |  28 +
- nl-core/nl-core-documents/pom.xml             |   4 +-
+ nl-core/nl-core-documents/pom.xml             |   3 +-
  nl-core/nl-core-exchange/pom.xml              |   4 +-
- nl-core/nl-core-jar/pom.xml                   |   4 +-
+ nl-core/nl-core-jar/pom.xml                   |   3 +-
  nl-core/pom.xml                               |  30 +
- nl-interfaces-eml/pom.xml                     |   4 +-
- nl-interfaces-met/pom.xml                     |   2 +-
+ nl-interfaces-eml/pom.xml                     |   3 +-
+ nl-interfaces-x509/pom.xml                    |   3 +-
  .../pom.xml                                   |  12 +-
  .../nl-sitzberechnung-osv-legacy/pom.xml      |   4 +-
  nl-sitzberechnung/pom.xml                     |  30 +
  nl-was/nl-was-documents/pom.xml               |   4 +-
  nl-was/nl-was-exchange/pom.xml                |   4 +-
  nl-was/nl-was-jar/pom.xml                     |   3 +-
- nl-was/nl-was-sitzberechnung/pom.xml          |   4 +-
+ nl-was/nl-was-sitzberechnung/pom.xml          |   3 +-
  nl-was/pom.xml                                |  31 +
- pom.xml                                       | 695 ++++++++++++++++++
- 43 files changed, 1247 insertions(+), 61 deletions(-)
+ pom.xml                                       | 753 ++++++++++++++++++
+ 45 files changed, 1332 insertions(+), 56 deletions(-)
  create mode 100644 .gitignore
  create mode 100644 elect-base-extension/pom.xml
  create mode 100644 elect-base/pom.xml
+ create mode 100644 elect-common-extension/pom.xml
  create mode 100644 elect-common/pom.xml
  create mode 100644 elect-core/pom.xml
  create mode 100644 elect-model-db/pom.xml
@@ -68,14 +71,37 @@ Subject: [PATCH] Patch met aanpassingen en extra pom.xml bestanden
 
 diff --git a/.gitignore b/.gitignore
 new file mode 100644
-index 0000000..2f7896d
+index 0000000..ccc8e57
 --- /dev/null
 +++ b/.gitignore
-@@ -0,0 +1 @@
+@@ -0,0 +1,4 @@
 +target/
++.project
++.classpath
++.settings/
+diff --git a/elect-base-extension/elect-base-extension-soap/pom.xml b/elect-base-extension/elect-base-extension-soap/pom.xml
+index 503cadd..1c0b90e 100644
+--- a/elect-base-extension/elect-base-extension-soap/pom.xml
++++ b/elect-base-extension/elect-base-extension-soap/pom.xml
+@@ -28,7 +28,7 @@
+             <artifactId>javaee-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
+-
++<!--
+         <dependency>
+             <groupId>de.ivu.elect</groupId>
+             <artifactId>elect-base-test-helper</artifactId>
+@@ -40,5 +40,6 @@
+             <artifactId>testng</artifactId>
+             <scope>test</scope>
+         </dependency>
++-->
+     </dependencies>
+ </project>
 diff --git a/elect-base-extension/pom.xml b/elect-base-extension/pom.xml
 new file mode 100644
-index 0000000..d081704
+index 0000000..5394a8b
 --- /dev/null
 +++ b/elect-base-extension/pom.xml
 @@ -0,0 +1,30 @@
@@ -87,11 +113,11 @@ index 0000000..d081704
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>elect-base-extension</artifactId>
-+  <version>4.141.0.1</version>
++  <version>4.160.0</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -101,9 +127,9 @@ index 0000000..d081704
 +        <activeByDefault>true</activeByDefault>
 +      </activation>
 +      <modules>
-+        <module>elect-base-extension-encryption</module>
++        <module>elect-base-extension-csv-exporter</module>
 +        <module>elect-base-extension-hibernate</module>
-+        <module>elect-base-extension-resteasy</module>
++        <module>elect-base-extension-soap</module>
 +      </modules>
 +    </profile>
 +</profiles>
@@ -111,7 +137,7 @@ index 0000000..d081704
 +</project>
 \ No newline at end of file
 diff --git a/elect-base/elect-base-documents/pom.xml b/elect-base/elect-base-documents/pom.xml
-index ed13931..4617583 100644
+index c9d5b58..53e7cf0 100644
 --- a/elect-base/elect-base-documents/pom.xml
 +++ b/elect-base/elect-base-documents/pom.xml
 @@ -22,6 +22,10 @@
@@ -150,10 +176,10 @@ index ed13931..4617583 100644
 +-->
  </project>
 diff --git a/elect-base/elect-base-exchange/pom.xml b/elect-base/elect-base-exchange/pom.xml
-index 79484bb..1b6401b 100644
+index d4d97c2..b961318 100644
 --- a/elect-base/elect-base-exchange/pom.xml
 +++ b/elect-base/elect-base-exchange/pom.xml
-@@ -13,6 +13,12 @@
+@@ -13,6 +13,11 @@
      <name>${project.artifactId} : ${project.version}</name>
  
      <dependencies>
@@ -162,15 +188,14 @@ index 79484bb..1b6401b 100644
 +            <artifactId>jdom</artifactId>
 +            <version>1.1.3</version>
 +        </dependency>
-+
+         <!-- TODO langfristig auslagern -->
          <dependency>
-             <groupId>${project.groupId}</groupId>
-             <artifactId>elect-base-jar</artifactId>
+             <groupId>de.ivu.elect</groupId>
 diff --git a/elect-base/elect-base-jar/pom.xml b/elect-base/elect-base-jar/pom.xml
-index 1601d9c..d19a029 100644
+index f020c77..ace3cb3 100644
 --- a/elect-base/elect-base-jar/pom.xml
 +++ b/elect-base/elect-base-jar/pom.xml
-@@ -103,13 +103,13 @@
+@@ -97,13 +97,13 @@
              <groupId>net.sf.kxml</groupId>
              <artifactId>kxml2-min</artifactId>
          </dependency>
@@ -186,7 +211,7 @@ index 1601d9c..d19a029 100644
          <dependency>
              <groupId>org.testng</groupId>
              <artifactId>testng</artifactId>
-@@ -136,6 +136,7 @@
+@@ -130,6 +130,7 @@
              </resource>
          </resources>
          <plugins>
@@ -194,7 +219,7 @@ index 1601d9c..d19a029 100644
              <plugin>
                  <groupId>de.ivu.takatuka</groupId>
                  <artifactId>takatuka-maven-plugin</artifactId>
-@@ -196,7 +197,7 @@
+@@ -190,7 +191,7 @@
                      </execution>
                  </executions>
              </plugin>
@@ -205,7 +230,7 @@ index 1601d9c..d19a029 100644
                  <executions>
 diff --git a/elect-base/pom.xml b/elect-base/pom.xml
 new file mode 100644
-index 0000000..49674b7
+index 0000000..9d00918
 --- /dev/null
 +++ b/elect-base/pom.xml
 @@ -0,0 +1,30 @@
@@ -217,11 +242,11 @@ index 0000000..49674b7
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>elect-base</artifactId>
-+  <version>4.141.0.1</version>
++  <version>4.160.0</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -240,8 +265,43 @@ index 0000000..49674b7
 +
 +</project>
 \ No newline at end of file
+diff --git a/elect-common-extension/pom.xml b/elect-common-extension/pom.xml
+new file mode 100644
+index 0000000..5a5b9b6
+--- /dev/null
++++ b/elect-common-extension/pom.xml
+@@ -0,0 +1,28 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
++  <modelVersion>4.0.0</modelVersion>
++
++  <parent>
++    <groupId>de.ivu.elect</groupId>
++    <artifactId>elect-parent</artifactId>
++    <version>1.38.0</version>
++  </parent>
++
++  <artifactId>elect-common-extension</artifactId>
++  <version>4.160.0</version>
++  <packaging>pom</packaging>
++
++  <profiles>
++    <profile>
++      <id>default</id>
++      <activation>
++        <activeByDefault>true</activeByDefault>
++      </activation>
++      <modules>
++        <module>elect-common-extension-personenregister-webservice</module>
++      </modules>
++    </profile>
++</profiles>
++
++</project>
+\ No newline at end of file
 diff --git a/elect-common/elect-common-documents/pom.xml b/elect-common/elect-common-documents/pom.xml
-index f327a42..97b723f 100644
+index 9cb4ba8..02ec803 100644
 --- a/elect-common/elect-common-documents/pom.xml
 +++ b/elect-common/elect-common-documents/pom.xml
 @@ -17,6 +17,7 @@
@@ -304,7 +364,7 @@ index f327a42..97b723f 100644
 +-->
  </project>
 diff --git a/elect-common/elect-common-exchange/pom.xml b/elect-common/elect-common-exchange/pom.xml
-index c5085f8..87dd75f 100644
+index adc6869..0114d2f 100644
 --- a/elect-common/elect-common-exchange/pom.xml
 +++ b/elect-common/elect-common-exchange/pom.xml
 @@ -13,6 +13,12 @@
@@ -339,10 +399,10 @@ index c5085f8..87dd75f 100644
  			<groupId>org.testng</groupId>
  			<artifactId>testng</artifactId>
 diff --git a/elect-common/elect-common-jar/pom.xml b/elect-common/elect-common-jar/pom.xml
-index dd97958..82e9202 100644
+index b6c1d62..3ac6484 100644
 --- a/elect-common/elect-common-jar/pom.xml
 +++ b/elect-common/elect-common-jar/pom.xml
-@@ -40,7 +40,7 @@
+@@ -31,7 +31,7 @@
              <artifactId>javaee-api</artifactId>
              <scope>provided</scope>
          </dependency>
@@ -351,7 +411,7 @@ index dd97958..82e9202 100644
          <dependency>
              <groupId>${project.groupId}</groupId>
              <artifactId>elect-base-test-helper</artifactId>
-@@ -52,7 +52,7 @@
+@@ -43,7 +43,7 @@
              <type>test-jar</type>
              <scope>test</scope>
          </dependency>
@@ -360,7 +420,7 @@ index dd97958..82e9202 100644
          <dependency>
              <groupId>org.testng</groupId>
              <artifactId>testng</artifactId>
-@@ -97,6 +97,7 @@
+@@ -82,6 +82,7 @@
  
      <build>
          <plugins>
@@ -368,7 +428,7 @@ index dd97958..82e9202 100644
              <plugin>
                  <groupId>de.ivu.takatuka</groupId>
                  <artifactId>takatuka-maven-plugin</artifactId>
-@@ -132,7 +133,7 @@
+@@ -117,7 +118,7 @@
                      </execution>
                  </executions>
              </plugin>
@@ -379,7 +439,7 @@ index dd97958..82e9202 100644
                  <executions>
 diff --git a/elect-common/pom.xml b/elect-common/pom.xml
 new file mode 100644
-index 0000000..d0412fa
+index 0000000..b49e400
 --- /dev/null
 +++ b/elect-common/pom.xml
 @@ -0,0 +1,30 @@
@@ -391,11 +451,11 @@ index 0000000..d0412fa
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>elect-common</artifactId>
-+  <version>4.141.0.1</version>
++  <version>4.160.0</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -415,10 +475,10 @@ index 0000000..d0412fa
 +</project>
 \ No newline at end of file
 diff --git a/elect-core/elect-core-documents/pom.xml b/elect-core/elect-core-documents/pom.xml
-index db8f75a..4252c6c 100644
+index aa4aac5..1ac9a06 100644
 --- a/elect-core/elect-core-documents/pom.xml
 +++ b/elect-core/elect-core-documents/pom.xml
-@@ -41,6 +41,7 @@
+@@ -42,6 +42,7 @@
  		</dependency>
  
  		<!-- NOTE: diese Abhängigkeiten werden in das Ergebnis-ZIP eingebunden! -->
@@ -426,7 +486,7 @@ index db8f75a..4252c6c 100644
  		<dependency>
  			<groupId>de.ivu.elect</groupId>
  			<artifactId>elect-common-documents</artifactId>
-@@ -65,13 +66,13 @@
+@@ -66,13 +67,13 @@
  			<classifier>document-templates</classifier>
  			<type>zip</type>
  		</dependency>
@@ -442,7 +502,7 @@ index db8f75a..4252c6c 100644
  		<dependency>
  			<groupId>de.ivu.elect</groupId>
  			<artifactId>elect-base-test-helper</artifactId>
-@@ -95,7 +96,7 @@
+@@ -96,7 +97,7 @@
  			<type>test-jar</type>
  			<scope>test</scope>
  		</dependency>
@@ -451,7 +511,7 @@ index db8f75a..4252c6c 100644
  		<dependency>
  			<groupId>org.testng</groupId>
  			<artifactId>testng</artifactId>
-@@ -107,7 +108,7 @@
+@@ -108,7 +109,7 @@
  			<scope>test</scope>
  		</dependency>
  	</dependencies>
@@ -460,7 +520,7 @@ index db8f75a..4252c6c 100644
  	<profiles>
  		<profile>
  			<id>build-documents</id>
-@@ -141,7 +142,7 @@
+@@ -142,7 +143,7 @@
  						<artifactId>maven-assembly-plugin</artifactId>
  
  						<dependencies>
@@ -469,7 +529,7 @@ index db8f75a..4252c6c 100644
  							<dependency>
  								<groupId>de.ivu.elect</groupId>
  								<artifactId>elect-common-documents</artifactId>
-@@ -172,4 +173,5 @@
+@@ -173,4 +174,5 @@
  			</build>
  		</profile>
  	</profiles>
@@ -477,18 +537,18 @@ index db8f75a..4252c6c 100644
  </project>
 \ No newline at end of file
 diff --git a/elect-core/elect-core-exchange/pom.xml b/elect-core/elect-core-exchange/pom.xml
-index 552961b..fb337f2 100644
+index d8527cb..56f60dd 100644
 --- a/elect-core/elect-core-exchange/pom.xml
 +++ b/elect-core/elect-core-exchange/pom.xml
-@@ -38,7 +38,7 @@
+@@ -32,7 +32,7 @@
              <artifactId>javaee-api</artifactId>
              <scope>provided</scope>
          </dependency>
 -
 +<!--
- 		<dependency>
- 			<groupId>${project.groupId}</groupId>
- 			<artifactId>elect-base-test-helper</artifactId>
+         <dependency>
+             <groupId>${project.groupId}</groupId>
+             <artifactId>elect-base-test-helper</artifactId>
 @@ -62,7 +62,7 @@
              <type>test-jar</type>
              <scope>test</scope>
@@ -499,67 +559,43 @@ index 552961b..fb337f2 100644
              <groupId>org.testng</groupId>
              <artifactId>testng</artifactId>
 diff --git a/elect-core/elect-core-jar/pom.xml b/elect-core/elect-core-jar/pom.xml
-index fb8c883..46d577e 100644
+index ea82252..005191b 100644
 --- a/elect-core/elect-core-jar/pom.xml
 +++ b/elect-core/elect-core-jar/pom.xml
-@@ -13,6 +13,11 @@
- 	<name>${project.artifactId} : ${project.version}</name>
- 
- 	<dependencies>
-+    	<dependency>
-+			<groupId>commons-collections</groupId>
-+			<artifactId>commons-collections</artifactId>
-+			<version>3.2.2</version>
-+		</dependency>
- 		<dependency>
- 			<groupId>${project.groupId}</groupId>
- 			<artifactId>elect-technical-jar</artifactId>
-@@ -49,7 +54,7 @@
- 		<!--  Nur benötigt, wenn Beziehungen gecached werden sollen,  deaktiviert,
- gibt Probleme beim Löschen von Entitäten <dependency> <groupId>org.hibernate</groupId>
- <artifactId>hibernate-annotations</artifactId> <scope>provided</scope> </dependency> -->
+@@ -44,7 +44,7 @@
+         <!-- Nur benötigt, wenn Beziehungen gecached werden sollen, deaktiviert,
+         gibt Probleme beim Löschen von Entitäten <dependency> <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-annotations</artifactId> <scope>provided</scope> </dependency> -->
 -
 +<!--
- 		<dependency>
- 			<groupId>${project.groupId}</groupId>
- 			<artifactId>elect-base-test-helper</artifactId>
-@@ -67,7 +72,7 @@ gibt Probleme beim Löschen von Entitäten <dependency> <groupId>org.hibernate</
-             <type>test-jar</type>
+         <dependency>
+             <groupId>${project.groupId}</groupId>
+             <artifactId>elect-base-test-helper</artifactId>
+@@ -73,10 +73,12 @@
+             <artifactId>mockito-core</artifactId>
              <scope>test</scope>
          </dependency>
--
 +-->
- 		<dependency>
- 			<groupId>org.testng</groupId>
- 			<artifactId>testng</artifactId>
-@@ -86,6 +91,7 @@ gibt Probleme beim Löschen von Entitäten <dependency> <groupId>org.hibernate</
+     </dependencies>
  
- 	<build>
- 		<plugins>
+     <build>
+         <plugins>
 +<!--
- 			<plugin>
- 				<groupId>de.ivu.takatuka</groupId>
- 				<artifactId>takatuka-maven-plugin</artifactId>
-@@ -103,7 +109,7 @@ gibt Probleme beim Löschen von Entitäten <dependency> <groupId>org.hibernate</
- 				</dependencies>
- 			</plugin>
- 
--			<!-- m2eclipse add source path -->
-+			<!- - m2eclipse add source path - ->
- 			<plugin>
- 				<groupId>org.codehaus.mojo</groupId>
- 				<artifactId>build-helper-maven-plugin</artifactId>
-@@ -133,6 +139,7 @@ gibt Probleme beim Löschen von Entitäten <dependency> <groupId>org.hibernate</
+             <plugin>
+                 <groupId>de.ivu.takatuka</groupId>
+                 <artifactId>takatuka-maven-plugin</artifactId>
+@@ -112,7 +114,7 @@
                      </execution>
                  </executions>
              </plugin>
+-
 +-->
- 		</plugins>
- 	</build>
- 
+             <plugin>
+                 <artifactId>maven-jar-plugin</artifactId>
+                 <executions>
 diff --git a/elect-core/pom.xml b/elect-core/pom.xml
 new file mode 100644
-index 0000000..cb0f34d
+index 0000000..897547b
 --- /dev/null
 +++ b/elect-core/pom.xml
 @@ -0,0 +1,30 @@
@@ -571,11 +607,11 @@ index 0000000..cb0f34d
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>elect-core</artifactId>
-+  <version>4.141.0.1</version>
++  <version>4.160.0</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -596,7 +632,7 @@ index 0000000..cb0f34d
 \ No newline at end of file
 diff --git a/elect-model-db/pom.xml b/elect-model-db/pom.xml
 new file mode 100644
-index 0000000..df95451
+index 0000000..188269c
 --- /dev/null
 +++ b/elect-model-db/pom.xml
 @@ -0,0 +1,37 @@
@@ -609,7 +645,7 @@ index 0000000..df95451
 +    <parent>
 +      <groupId>de.ivu.elect</groupId>
 +	  <artifactId>elect-parent</artifactId>
-+      <version>1.31.1</version>
++      <version>1.38.0</version>
 +    </parent>
 +
 +    <artifactId>elect-model-db</artifactId>
@@ -639,7 +675,7 @@ index 0000000..df95451
 +    </project>
 diff --git a/elect-sitzberechnung/pom.xml b/elect-sitzberechnung/pom.xml
 new file mode 100644
-index 0000000..96d12d0
+index 0000000..be4259e
 --- /dev/null
 +++ b/elect-sitzberechnung/pom.xml
 @@ -0,0 +1,29 @@
@@ -651,11 +687,11 @@ index 0000000..96d12d0
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>elect-sitzberechnung</artifactId>
-+  <version>0.0.12</version>
++  <version>0.1.0</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -675,7 +711,7 @@ index 0000000..96d12d0
 \ No newline at end of file
 diff --git a/elect-stimmzettel-interfaces/pom.xml b/elect-stimmzettel-interfaces/pom.xml
 new file mode 100644
-index 0000000..d8c60ee
+index 0000000..5e427a6
 --- /dev/null
 +++ b/elect-stimmzettel-interfaces/pom.xml
 @@ -0,0 +1,28 @@
@@ -687,11 +723,11 @@ index 0000000..d8c60ee
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>elect-stimmzettel-interfaces</artifactId>
-+  <version>0.2.0</version>
++  <version>0.3.0</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -710,7 +746,7 @@ index 0000000..d8c60ee
 \ No newline at end of file
 diff --git a/elect-technical/pom.xml b/elect-technical/pom.xml
 new file mode 100644
-index 0000000..ed1c86c
+index 0000000..d7a33a0
 --- /dev/null
 +++ b/elect-technical/pom.xml
 @@ -0,0 +1,33 @@
@@ -722,11 +758,11 @@ index 0000000..ed1c86c
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>elect-technical</artifactId>
-+  <version>2.44.0</version>
++  <version>2.51.0</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -737,7 +773,7 @@ index 0000000..ed1c86c
 +      </activation>
 +      <modules>
 +        <module>elect-technical-common</module>
-+        <module>elect-technical-encryption</module>
++        <module>elect-technical-password-hash</module>
 +        <module>elect-technical-jaxb</module>
 +        <module>elect-technical-security</module>
 +        <module>elect-technical-jar</module>
@@ -749,7 +785,7 @@ index 0000000..ed1c86c
 +</project>
 \ No newline at end of file
 diff --git a/elect-was/elect-was-documents/pom.xml b/elect-was/elect-was-documents/pom.xml
-index 13dd2d7..2b6adf6 100644
+index d2566d6..925d8f4 100644
 --- a/elect-was/elect-was-documents/pom.xml
 +++ b/elect-was/elect-was-documents/pom.xml
 @@ -27,6 +27,7 @@
@@ -788,10 +824,10 @@ index 13dd2d7..2b6adf6 100644
  			<groupId>org.testng</groupId>
  			<artifactId>testng</artifactId>
 diff --git a/elect-was/elect-was-exchange/pom.xml b/elect-was/elect-was-exchange/pom.xml
-index 7d54d56..6bc3d7f 100644
+index c485687..6b8433d 100644
 --- a/elect-was/elect-was-exchange/pom.xml
 +++ b/elect-was/elect-was-exchange/pom.xml
-@@ -58,7 +58,7 @@
+@@ -48,7 +48,7 @@
  			<artifactId>javaee-api</artifactId>
  			<scope>provided</scope>
  		</dependency>
@@ -800,22 +836,21 @@ index 7d54d56..6bc3d7f 100644
  		<dependency>
  			<groupId>${project.groupId}</groupId>
  			<artifactId>elect-base-test-helper</artifactId>
-@@ -94,7 +94,7 @@
- 			<type>test-jar</type>
+@@ -98,6 +98,7 @@
+ 			<artifactId>mockito-core</artifactId>
  			<scope>test</scope>
  		</dependency>
--
 +-->
- 		<dependency>
- 			<groupId>org.jboss.resteasy</groupId>
- 			<artifactId>resteasy-jaxrs</artifactId>
+ 	</dependencies>
+ 
+ 	<build>
 diff --git a/elect-was/elect-was-jar/pom.xml b/elect-was/elect-was-jar/pom.xml
-index 9566325..12f7f1a 100644
+index c1f3eb8..04b8d1f 100644
 --- a/elect-was/elect-was-jar/pom.xml
 +++ b/elect-was/elect-was-jar/pom.xml
 @@ -51,7 +51,7 @@
          </dependency>
-         <!--  Nur benötigt, wenn Beziehungen gecached werden sollen,  deaktiviert, gibt Probleme beim Löschen von Entitäten <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-annotations</artifactId> 
+         <!-- Nur benötigt, wenn Beziehungen gecached werden sollen, deaktiviert, gibt Probleme beim Löschen von Entitäten <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-annotations</artifactId> 
              <scope>provided</scope> </dependency> -->
 -
 +<!--
@@ -853,7 +888,7 @@ index 9566325..12f7f1a 100644
      </build>
  
 diff --git a/elect-was/elect-was-persistence/pom.xml b/elect-was/elect-was-persistence/pom.xml
-index a9309ba..5753442 100644
+index cee72ae..dea5991 100644
 --- a/elect-was/elect-was-persistence/pom.xml
 +++ b/elect-was/elect-was-persistence/pom.xml
 @@ -35,7 +35,7 @@
@@ -875,7 +910,7 @@ index a9309ba..5753442 100644
  
 diff --git a/elect-was/pom.xml b/elect-was/pom.xml
 new file mode 100644
-index 0000000..63c9ff6
+index 0000000..cf3cadf
 --- /dev/null
 +++ b/elect-was/pom.xml
 @@ -0,0 +1,32 @@
@@ -887,11 +922,11 @@ index 0000000..63c9ff6
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>elect-was</artifactId>
-+  <version>4.141.0.1</version>
++  <version>4.160.0</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -914,7 +949,7 @@ index 0000000..63c9ff6
 \ No newline at end of file
 diff --git a/gbav/pom.xml b/gbav/pom.xml
 new file mode 100644
-index 0000000..93ee8a0
+index 0000000..b80a652
 --- /dev/null
 +++ b/gbav/pom.xml
 @@ -0,0 +1,28 @@
@@ -926,11 +961,11 @@ index 0000000..93ee8a0
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>nl-interfaces-gbav</artifactId>
-+  <version>0.0.6</version> <!-- nicht manuell ändern, release.cmd nutzen -->
++  <version>0.0.33</version> <!-- nicht manuell ändern, release.cmd nutzen -->
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -948,7 +983,7 @@ index 0000000..93ee8a0
 +</project>
 \ No newline at end of file
 diff --git a/nl-base/nl-base-jar/pom.xml b/nl-base/nl-base-jar/pom.xml
-index 7fd6c01..e0f7c1c 100644
+index 664569f..130628d 100644
 --- a/nl-base/nl-base-jar/pom.xml
 +++ b/nl-base/nl-base-jar/pom.xml
 @@ -28,7 +28,7 @@
@@ -971,7 +1006,7 @@ index 7fd6c01..e0f7c1c 100644
              <artifactId>testng</artifactId>
 diff --git a/nl-base/pom.xml b/nl-base/pom.xml
 new file mode 100644
-index 0000000..c140833
+index 0000000..315d95d
 --- /dev/null
 +++ b/nl-base/pom.xml
 @@ -0,0 +1,28 @@
@@ -983,11 +1018,11 @@ index 0000000..c140833
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>nl-base</artifactId>
-+  <version>1.2.0.1</version>
++  <version>1.3.9</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -1005,10 +1040,10 @@ index 0000000..c140833
 +</project>
 \ No newline at end of file
 diff --git a/nl-common/nl-common-jar/pom.xml b/nl-common/nl-common-jar/pom.xml
-index a107b3a..cc46b14 100644
+index 39faadf..d3643a9 100644
 --- a/nl-common/nl-common-jar/pom.xml
 +++ b/nl-common/nl-common-jar/pom.xml
-@@ -33,7 +33,7 @@
+@@ -37,7 +37,7 @@
              <artifactId>javaee-api</artifactId>
              <scope>provided</scope>
          </dependency>
@@ -1017,7 +1052,7 @@ index a107b3a..cc46b14 100644
          <dependency>
              <groupId>de.ivu.elect</groupId>
              <artifactId>elect-base-test-helper</artifactId>
-@@ -51,7 +51,7 @@
+@@ -55,7 +55,7 @@
              <type>test-jar</type>
              <scope>test</scope>
          </dependency>
@@ -1028,7 +1063,7 @@ index a107b3a..cc46b14 100644
              <artifactId>testng</artifactId>
 diff --git a/nl-common/pom.xml b/nl-common/pom.xml
 new file mode 100644
-index 0000000..3cdd7a1
+index 0000000..3f70799
 --- /dev/null
 +++ b/nl-common/pom.xml
 @@ -0,0 +1,28 @@
@@ -1040,11 +1075,11 @@ index 0000000..3cdd7a1
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>nl-common</artifactId>
-+  <version>1.2.0.1</version>
++  <version>1.3.9</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -1062,29 +1097,28 @@ index 0000000..3cdd7a1
 +</project>
 \ No newline at end of file
 diff --git a/nl-core/nl-core-documents/pom.xml b/nl-core/nl-core-documents/pom.xml
-index 9a92896..53a5da0 100644
+index 76710de..0344b67 100644
 --- a/nl-core/nl-core-documents/pom.xml
 +++ b/nl-core/nl-core-documents/pom.xml
 @@ -56,7 +56,7 @@
- 			<artifactId>javaee-api</artifactId>
- 			<scope>provided</scope>
- 		</dependency>
+             <artifactId>javaee-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
 -
 +<!--
          <dependency>
              <groupId>de.ivu.elect</groupId>
              <artifactId>elect-base-test-helper</artifactId>
-@@ -92,7 +92,7 @@
-             <type>test-jar</type>
+@@ -103,6 +103,7 @@
+             <artifactId>mockito-core</artifactId>
              <scope>test</scope>
          </dependency>
--
 +-->
- 		<dependency>
- 			<groupId>org.testng</groupId>
- 			<artifactId>testng</artifactId>
+     </dependencies>
+ 
+     <build>
 diff --git a/nl-core/nl-core-exchange/pom.xml b/nl-core/nl-core-exchange/pom.xml
-index 1b9cf0b..70aa353 100644
+index 6e49489..ca63af0 100644
 --- a/nl-core/nl-core-exchange/pom.xml
 +++ b/nl-core/nl-core-exchange/pom.xml
 @@ -31,7 +31,7 @@
@@ -1106,30 +1140,29 @@ index 1b9cf0b..70aa353 100644
  			<groupId>org.testng</groupId>
  			<artifactId>testng</artifactId>
 diff --git a/nl-core/nl-core-jar/pom.xml b/nl-core/nl-core-jar/pom.xml
-index ba7a8ed..71d5ac2 100644
+index fcffca9..a2e779e 100644
 --- a/nl-core/nl-core-jar/pom.xml
 +++ b/nl-core/nl-core-jar/pom.xml
-@@ -40,7 +40,7 @@
-       <artifactId>javaee-api</artifactId>
-       <scope>provided</scope>
-     </dependency>
+@@ -37,7 +37,7 @@
+             <artifactId>javaee-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
 -
 +<!--
-     <dependency>
-       <groupId>de.ivu.elect</groupId>
-       <artifactId>elect-base-test-helper</artifactId>
-@@ -64,7 +64,7 @@
-       <type>test-jar</type>
-       <scope>test</scope>
-     </dependency>
--
+         <dependency>
+             <groupId>de.ivu.elect</groupId>
+             <artifactId>elect-base-test-helper</artifactId>
+@@ -72,6 +72,7 @@
+             <artifactId>mockito-core</artifactId>
+             <scope>test</scope>
+         </dependency>
 +-->
-     <dependency>
-       <groupId>org.testng</groupId>
-       <artifactId>testng</artifactId>
+     </dependencies>
+ 
+     <build>
 diff --git a/nl-core/pom.xml b/nl-core/pom.xml
 new file mode 100644
-index 0000000..c6d2529
+index 0000000..8b93ca0
 --- /dev/null
 +++ b/nl-core/pom.xml
 @@ -0,0 +1,30 @@
@@ -1141,11 +1174,11 @@ index 0000000..c6d2529
 +  <parent>
 +   <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +   <artifactId>nl-core</artifactId>
-+   <version>1.2.0.1</version>
++   <version>1.3.9</version>
 +   <packaging>pom</packaging>
 +
 +  <profiles>
@@ -1165,40 +1198,35 @@ index 0000000..c6d2529
 +</project>
 \ No newline at end of file
 diff --git a/nl-interfaces-eml/pom.xml b/nl-interfaces-eml/pom.xml
-index 479859a..7f288f4 100644
+index 7efec62..4685c97 100644
 --- a/nl-interfaces-eml/pom.xml
 +++ b/nl-interfaces-eml/pom.xml
-@@ -8,13 +8,13 @@
-     <parent>
-         <groupId>de.ivu.elect</groupId>
-         <artifactId>elect-parent</artifactId>
--        <version>1.33.0</version>
-+        <version>1.31.1</version>
-     </parent>
- 
+@@ -14,7 +14,8 @@
      <name>${project.artifactId} : ${project.version}</name>
  
      <properties>
--        <elect-technical.version>2.37.7</elect-technical.version>
-+        <elect-technical.version>2.44.0</elect-technical.version>
+-        <elect-technical.version>2.50.0</elect-technical.version>
++        <!-- <elect-technical.version>2.50.0</elect-technical.version> -->
++        <elect-technical.version>2.51.0</elect-technical.version>
          <sonar.coverage.jacoco.xmlReportPaths>${basedir}/target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
      </properties>
  
-diff --git a/nl-interfaces-met/pom.xml b/nl-interfaces-met/pom.xml
-index 71fb71f..530ecf6 100644
---- a/nl-interfaces-met/pom.xml
-+++ b/nl-interfaces-met/pom.xml
-@@ -8,7 +8,7 @@
+diff --git a/nl-interfaces-x509/pom.xml b/nl-interfaces-x509/pom.xml
+index 9b1359c..3b206c0 100644
+--- a/nl-interfaces-x509/pom.xml
++++ b/nl-interfaces-x509/pom.xml
+@@ -8,7 +8,8 @@
      <parent>
          <groupId>de.ivu.elect</groupId>
          <artifactId>elect-parent</artifactId>
--        <version>1.32.0</version>
-+        <version>1.31.1</version>
+-        <version>1.38.4</version>
++        <!-- <version>1.38.4</version> -->
++        <version>1.38.0</version>
      </parent>
  
      <name>${project.artifactId} : ${project.version}</name>
 diff --git a/nl-sitzberechnung/nl-sitzberechnung-osv-elect-mapper/pom.xml b/nl-sitzberechnung/nl-sitzberechnung-osv-elect-mapper/pom.xml
-index 5f3e41e..168e654 100644
+index 50db38c..fa48b73 100644
 --- a/nl-sitzberechnung/nl-sitzberechnung-osv-elect-mapper/pom.xml
 +++ b/nl-sitzberechnung/nl-sitzberechnung-osv-elect-mapper/pom.xml
 @@ -27,13 +27,13 @@
@@ -1251,7 +1279,7 @@ index 5f3e41e..168e654 100644
  
      <profiles>
 diff --git a/nl-sitzberechnung/nl-sitzberechnung-osv-legacy/pom.xml b/nl-sitzberechnung/nl-sitzberechnung-osv-legacy/pom.xml
-index b256587..db77c77 100644
+index d80bb3a..7c943d1 100644
 --- a/nl-sitzberechnung/nl-sitzberechnung-osv-legacy/pom.xml
 +++ b/nl-sitzberechnung/nl-sitzberechnung-osv-legacy/pom.xml
 @@ -27,7 +27,7 @@
@@ -1274,7 +1302,7 @@ index b256587..db77c77 100644
              <artifactId>slf4j-api</artifactId>
 diff --git a/nl-sitzberechnung/pom.xml b/nl-sitzberechnung/pom.xml
 new file mode 100644
-index 0000000..9e3d0b2
+index 0000000..1a134b7
 --- /dev/null
 +++ b/nl-sitzberechnung/pom.xml
 @@ -0,0 +1,30 @@
@@ -1286,11 +1314,11 @@ index 0000000..9e3d0b2
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>nl-sitzberechnung</artifactId>
-+  <version>0.0.27</version> <!-- nicht manuell ändern, release.cmd nutzen -->
++  <version>0.0.31</version> <!-- nicht manuell ändern, release.cmd nutzen -->
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -1310,7 +1338,7 @@ index 0000000..9e3d0b2
 +</project>
 \ No newline at end of file
 diff --git a/nl-was/nl-was-documents/pom.xml b/nl-was/nl-was-documents/pom.xml
-index 6efa995..4b389f3 100644
+index b4fc84c..63737fd 100644
 --- a/nl-was/nl-was-documents/pom.xml
 +++ b/nl-was/nl-was-documents/pom.xml
 @@ -99,7 +99,7 @@
@@ -1322,7 +1350,7 @@ index 6efa995..4b389f3 100644
  		<dependency>
  			<groupId>de.ivu.elect</groupId>
  			<artifactId>elect-base-test-helper</artifactId>
-@@ -153,7 +153,7 @@
+@@ -159,7 +159,7 @@
              <type>test-jar</type>
              <scope>test</scope>
          </dependency>
@@ -1332,7 +1360,7 @@ index 6efa995..4b389f3 100644
  			<groupId>org.testng</groupId>
  			<artifactId>testng</artifactId>
 diff --git a/nl-was/nl-was-exchange/pom.xml b/nl-was/nl-was-exchange/pom.xml
-index e475fad..81c7bec 100644
+index c675018..3f3397d 100644
 --- a/nl-was/nl-was-exchange/pom.xml
 +++ b/nl-was/nl-was-exchange/pom.xml
 @@ -31,7 +31,7 @@
@@ -1354,10 +1382,10 @@ index e475fad..81c7bec 100644
  			<groupId>org.testng</groupId>
  			<artifactId>testng</artifactId>
 diff --git a/nl-was/nl-was-jar/pom.xml b/nl-was/nl-was-jar/pom.xml
-index 6b9bbe2..9849de6 100644
+index 55229ae..46062b9 100644
 --- a/nl-was/nl-was-jar/pom.xml
 +++ b/nl-was/nl-was-jar/pom.xml
-@@ -47,7 +47,7 @@
+@@ -41,7 +41,7 @@
        <artifactId>javaee-api</artifactId>
        <scope>provided</scope>
      </dependency>
@@ -1366,7 +1394,7 @@ index 6b9bbe2..9849de6 100644
      <dependency>
        <groupId>de.ivu.elect</groupId>
        <artifactId>elect-base-test-helper</artifactId>
-@@ -91,6 +91,7 @@
+@@ -85,6 +85,7 @@
        <scope>test</scope>
      </dependency>
  
@@ -1375,29 +1403,28 @@ index 6b9bbe2..9849de6 100644
        <groupId>org.testng</groupId>
        <artifactId>testng</artifactId>
 diff --git a/nl-was/nl-was-sitzberechnung/pom.xml b/nl-was/nl-was-sitzberechnung/pom.xml
-index 5629e07..9b91ed7 100644
+index 8907814..8fc7769 100644
 --- a/nl-was/nl-was-sitzberechnung/pom.xml
 +++ b/nl-was/nl-was-sitzberechnung/pom.xml
-@@ -35,7 +35,7 @@
- 			<artifactId>javaee-api</artifactId>
- 			<scope>provided</scope>
- 		</dependency>
+@@ -34,7 +34,7 @@
+             <artifactId>javaee-api</artifactId>
+             <scope>provided</scope>
+         </dependency>
 -
 +<!--
- 		<dependency>
- 			<groupId>de.ivu.elect</groupId>
- 			<artifactId>nl-interfaces-eml</artifactId>
-@@ -58,6 +58,6 @@
- 			<artifactId>elect-base-test-helper</artifactId>
- 			<scope>test</scope>
- 		</dependency>
--
+         <dependency>
+             <groupId>de.ivu.elect</groupId>
+             <artifactId>nl-interfaces-eml</artifactId>
+@@ -63,5 +63,6 @@
+             <type>test-jar</type>
+             <scope>test</scope>
+         </dependency>
 +-->
- 	</dependencies>
+     </dependencies>
  </project>
 diff --git a/nl-was/pom.xml b/nl-was/pom.xml
 new file mode 100644
-index 0000000..8a510d5
+index 0000000..c6413ec
 --- /dev/null
 +++ b/nl-was/pom.xml
 @@ -0,0 +1,31 @@
@@ -1409,11 +1436,11 @@ index 0000000..8a510d5
 +  <parent>
 +    <groupId>de.ivu.elect</groupId>
 +    <artifactId>elect-parent</artifactId>
-+    <version>1.31.1</version>
++    <version>1.38.0</version>
 +  </parent>
 +
 +  <artifactId>nl-was</artifactId>
-+  <version>1.2.0.1</version>
++  <version>1.3.9</version>
 +  <packaging>pom</packaging>
 +
 +  <profiles>
@@ -1434,10 +1461,10 @@ index 0000000..8a510d5
 +</project>
 diff --git a/pom.xml b/pom.xml
 new file mode 100644
-index 0000000..09a65f4
+index 0000000..8b0ee3f
 --- /dev/null
 +++ b/pom.xml
-@@ -0,0 +1,695 @@
+@@ -0,0 +1,753 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 +     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -1445,13 +1472,13 @@ index 0000000..09a65f4
 +
 +  <groupId>de.ivu.elect</groupId>
 +  <artifactId>elect-parent</artifactId>
-+  <version>1.31.1</version>
++  <version>1.38.0</version>
 +  <packaging>pom</packaging>
 +
 +  <properties>
 +    <java.version>1.8</java.version>
-+    <ivu.elect.version>4.141.0.1</ivu.elect.version>
-+    <elect.model.version>4.141.0.1</elect.model.version>
++    <ivu.elect.version>4.160.0</ivu.elect.version>
++    <elect.model.version>4.160.0</elect.model.version>
 +    <elect.model.version>1.273.2</elect.model.version>
 +    <elect.technical.version>2.37.2</elect.technical.version>
 +
@@ -1515,181 +1542,191 @@ index 0000000..09a65f4
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-base-jar</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-base-jar</artifactId>
 +        <type>test-jar</type>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-base-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +          <groupId>de.ivu.elect</groupId>
 +          <artifactId>elect-base-documents</artifactId>
-+          <version>4.141.0.1</version>
++          <version>4.160.0</version>
 +          <classifier>manuals</classifier>
 +          <type>zip</type>
 +      </dependency>
 +      <dependency>
 +          <groupId>de.ivu.elect</groupId>
 +          <artifactId>elect-base-documents</artifactId>
-+          <version>4.141.0.1</version>
++          <version>4.160.0</version>
 +          <classifier>documents</classifier>
 +          <type>zip</type>
 +      </dependency>
 +      <dependency>
 +          <groupId>de.ivu.elect</groupId>
 +          <artifactId>elect-base-documents</artifactId>
-+          <version>4.141.0.1</version>
++          <version>4.160.0</version>
 +          <classifier>documents_en</classifier>
 +          <type>zip</type>
 +      </dependency>
 +      <dependency>
 +          <groupId>de.ivu.elect</groupId>
 +          <artifactId>elect-base-documents</artifactId>
-+          <version>4.141.0.1</version>
++          <version>4.160.0</version>
 +          <classifier>document-templates</classifier>
 +          <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-base-exchange</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-base-exchange</artifactId>
 +        <type>test-jar</type>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-base-test-helper</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
++      </dependency>
++      <dependency>
++        <groupId>de.ivu.elect</groupId>
++        <artifactId>elect-base-extension-csv-exporter</artifactId>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-base-extension-encryption</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
-+        <artifactId>elect-base-extension-resteasy</artifactId>
-+        <version>4.141.0.1</version>
-+      </dependency>
-+      <dependency>
-+        <groupId>de.ivu.elect</groupId>
-+        <artifactId>elect-common-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <artifactId>elect-base-extension-soap</artifactId>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-common-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
++      </dependency>
++      <dependency>
++        <groupId>de.ivu.elect</groupId>
++        <artifactId>elect-common-documents</artifactId>
++        <version>4.160.0</version>
 +        <classifier>manuals</classifier>
 +        <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-common-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <classifier>documents</classifier>
 +        <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-common-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <classifier>documents_en</classifier>
 +        <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-common-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <classifier>document-templates</classifier>
 +        <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-common-exchange</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
++      </dependency>
++      <dependency>
++        <groupId>de.ivu.elect</groupId>
++        <artifactId>elect-common-extension-personenregister-webservice</artifactId>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-common-jar</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-common-jar</artifactId>
 +        <type>test-jar</type>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <classifier>manuals</classifier>
 +         <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <classifier>documents</classifier>
 +        <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <classifier>documents_en</classifier>
 +        <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <classifier>document-templates</classifier>
 +        <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <type>zip</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-exchange</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-jar</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-core-jar</artifactId>
 +        <type>test-jar</type>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-interfaces-wus-was</artifactId>
-+        <version>1.0.242</version>
++        <version>1.0.248</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
@@ -1700,190 +1737,195 @@ index 0000000..09a65f4
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-sitzberechnung-common</artifactId>
-+        <version>0.0.12</version>
++        <version>0.1.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-sitzberechnung-interfaces</artifactId>
-+        <version>0.0.12</version>
++        <version>0.1.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-stimmzettel-interfaces-jar</artifactId>
-+        <version>0.2.0</version>
++        <version>0.3.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-sitzberechnung-testhelper</artifactId>
-+        <version>0.0.12</version>
++        <version>0.1.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-technical-common</artifactId>
-+        <version>2.44.0</version>
++        <version>2.51.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
-+        <artifactId>elect-technical-encryption</artifactId>
-+        <version>2.44.0</version>
++        <artifactId>elect-technical-password-hash</artifactId>
++        <version>2.51.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-technical-querydsl</artifactId>
-+        <version>2.44.0</version>
++        <version>2.51.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-technical-security</artifactId>
-+        <version>2.44.0</version>
++        <version>2.51.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-technical-jaxb</artifactId>
-+        <version>2.44.0</version>
++        <version>2.51.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-technical-jar</artifactId>
-+        <version>2.44.0</version>
++        <version>2.51.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-was-documents</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-was-exchange</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-was-exchange</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +        <type>test-jar</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-was-jar</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-was-jar</artifactId>
 +        <type>test-jar</type>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>elect-was-sitzberechnung</artifactId>
-+        <version>4.141.0.1</version>
++        <version>4.160.0</version>
 +      </dependency>
 +
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-base-jar</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-common-jar</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-common-jar</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +        <type>test-jar</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-core-documents</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-core-exchange</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-core-exchange</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +        <type>test-jar</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-core-jar</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-core-jar</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +        <type>test-jar</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>gbav-client</artifactId>
-+        <version>0.0.6</version> <!-- nicht manuell ändern, release.cmd nutzen -->
++        <version>0.0.33</version> <!-- nicht manuell ändern, release.cmd nutzen -->
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-interfaces-met</artifactId>
-+        <version>0.2.1</version> <!-- nicht manuell ändern, release.cmd nutzen -->
++        <version>0.4.0</version> <!-- nicht manuell ändern, release.cmd nutzen -->
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-sitzberechnung-osv-legacy</artifactId>
-+        <version>0.0.27</version>
++        <version>0.0.31</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-sitzberechnung-osv-legacy</artifactId>
-+        <version>0.0.27</version>
++        <version>0.0.31</version>
 +        <type>test-jar</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-sitzberechnung-osv-elect-mapper</artifactId>
-+        <version>0.0.27</version>
++        <version>0.0.31</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-sitzberechnung-osv-xls-tests</artifactId>
-+        <version>0.0.27</version>
++        <version>0.0.31</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-sitzberechnung-osv-p22-dokument</artifactId>
-+        <version>0.0.27</version>
++        <version>0.0.31</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-interfaces-eml</artifactId>
-+        <version>0.0.46</version>
++        <version>0.0.69</version>
++      </dependency>
++      <dependency>
++        <groupId>de.ivu.elect</groupId>
++        <artifactId>nl-interfaces-x509</artifactId>
++        <version>0.2.1</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-was-exchange</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-was-exchange</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +        <type>test-jar</type>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-was-jar</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +      </dependency>
 +      <dependency>
 +        <groupId>de.ivu.elect</groupId>
 +        <artifactId>nl-was-jar</artifactId>
-+        <version>1.2.0.1</version>
++        <version>1.3.9</version>
 +        <type>test-jar</type>
 +      </dependency>
 +
@@ -1920,12 +1962,38 @@ index 0000000..09a65f4
 +          <version>28.2-jre</version>
 +      </dependency>
 +
++      <dependency> <!--ELECT-11221-->
++          <groupId>jakarta.xml.soap</groupId>
++          <artifactId>jakarta.xml.soap-api</artifactId>
++          <version>1.4.2</version>
++      </dependency>
++      <dependency> <!--ELECT-11221-->
++          <groupId>jakarta.activation</groupId>
++          <artifactId>jakarta.activation-api</artifactId>
++          <version>1.2.2</version>
++      </dependency>
++      <dependency> <!--ELECT-11221-->
++          <groupId>jakarta.xml.bind</groupId>
++          <artifactId>jakarta.xml.bind-api</artifactId>
++          <version>2.3.3</version>
++      </dependency>
++
 +      <dependency>
 +        <groupId>javax</groupId>
 +        <artifactId>javaee-api</artifactId>
 +        <version>7.0</version>
 +      </dependency>
 +
++      <dependency>
++          <groupId>org.apache.cxf</groupId>
++          <artifactId>cxf-rt-frontend-jaxws</artifactId>
++          <version>3.4.0</version>
++      </dependency>
++      <dependency>
++          <groupId>org.apache.cxf</groupId>
++          <artifactId>cxf-rt-transports-http-hc</artifactId>
++          <version>3.4.0</version>
++      </dependency>
 +      <dependency>
 +        <groupId>org.apache.commons</groupId>
 +        <artifactId>commons-lang3</artifactId>
@@ -1940,6 +2008,21 @@ index 0000000..09a65f4
 +        <groupId>org.apache.commons</groupId>
 +        <artifactId>commons-text</artifactId>
 +        <version>1.8</version>
++      </dependency>
++      <dependency>
++          <groupId>org.apache.httpcomponents</groupId>
++          <artifactId>httpclient</artifactId>
++          <version>4.5.13</version>
++      </dependency>
++      <dependency>
++          <groupId>org.apache.httpcomponents</groupId>
++          <artifactId>httpcore</artifactId>
++          <version>4.4.13</version>
++      </dependency>
++      <dependency>
++          <groupId>org.apache.httpcomponents</groupId>
++          <artifactId>httpcore-nio</artifactId>
++          <version>4.4.13</version>
 +      </dependency>
 +      <dependency>
 +          <groupId>org.apache.poi</groupId>
@@ -2114,18 +2197,20 @@ index 0000000..09a65f4
 +        <module>elect-base</module>
 +        <module>elect-base-extension</module>
 +        <module>elect-common</module>
++        <module>elect-common-extension</module>
 +        <module>elect-stimmzettel-interfaces</module>
-+        <module>elect-core</module>
 +        <module>elect-interfaces-wus-was</module>
-+        <module>elect-sitzberechnung</module>
-+        <module>elect-technical</module>
 +        <module>elect-was</module>
++        <module>elect-technical</module>
++        <module>elect-core</module>
++        <module>elect-sitzberechnung</module>
 +        <module>gbav</module>
 +        <module>nl-base</module>
 +        <module>nl-common</module>
 +        <module>nl-core</module>
 +        <module>nl-interfaces-eml</module>
 +        <module>nl-interfaces-met</module>
++        <module>nl-interfaces-x509</module>
 +        <module>nl-sitzberechnung</module>
 +        <module>nl-was</module>
 +      </modules>
@@ -2135,5 +2220,5 @@ index 0000000..09a65f4
 +</project>
 \ No newline at end of file
 -- 
-2.25.1
+2.20.1
 
