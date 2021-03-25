@@ -2,6 +2,19 @@
 
 # Script om code van jar structuur naar java broncode structuur te verplaatsen.
 
+# Directories zitten 1 extra diep tov vorige versie.
+# Tussen directory heeft zelfde naam alleen met -sources toegevoegd.
+function prepareVerplaats {
+    dirs=`ls`
+    for d in $dirs
+    do
+      sources=$d/$d-sources
+      echo verplaats $d
+      mv $sources/* $d
+      rmdir $sources
+    done
+}
+
 function verplaats  {
     subdir=`echo $2 | sed 's/-[^-]*$//g'`
     if [[ $subdir == 'nl-interfaces' || $subdir == 'elect-interfaces-wus' ]]; then
@@ -104,6 +117,7 @@ function fixSitzberechnung {
 }
 
 function codefixes {
+  prepareVerplaats
   verwijderVersies
   verwijderClass
   pom
@@ -116,7 +130,7 @@ function codefixes {
 }
 
 function check {
-  if [ ! -e "$1/nl-was-jar-1.3.9" ]; then
+  if [ ! -e "$1/nl-was-jar-1.3.15.3" ]; then
     echo Heb je de juiste directory meegegeven waar de OSV2020-u broncode staat.
     echo
     exit 1;
@@ -156,6 +170,8 @@ cd $1
 gitInit
 gitTransform
 gitPatch osv2020-u.patch 'Patch met aanpassingen en extra pom.xml bestanden'
-gitPatch osv2020-u-dummy.patch 'Patch met dummy implementaties van ontbrekende classen'
+# Volgende regel voegt een aantal dummy classen toe die missen. Gebaseerd op versie 1.3.9
+#gitPatch osv2020-u-dummy.patch 'Patch met dummy implementaties van ontbrekende classen'
 
-echo Het zou nu moeten werken om met maven de code te bouwen.
+echo =======================
+echo Bestanden zijn omgezet.
