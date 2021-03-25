@@ -130,7 +130,7 @@ function codefixes {
 }
 
 function check {
-  if [ ! -e "$1/nl-was-jar-1.3.15.3" ]; then
+  if [ ! -e "$1/nl-was-jar-1.3.16.3" ]; then
     echo Heb je de juiste directory meegegeven waar de OSV2020-u broncode staat.
     echo
     exit 1;
